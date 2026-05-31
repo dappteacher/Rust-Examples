@@ -21,8 +21,8 @@ fn main() {
     let number1 = 25;
 
     {
-        let number = 16;
-        println!("{}", number);  // OK: prints 16
+        let number2 = 16;
+        println!("{}", number2);  // OK: prints 16
     }
 
     println!("{}", number2);     // ❌ ERROR: `number2` is not defined
@@ -34,10 +34,10 @@ fn main() {
 1. `let number1 = 25;`
    This declares a variable in the **outer scope**.
 
-2. `{ let number = 16; ... }`
+2. `{ let number2 = 16; ... }`
    This block creates a **new scope**.
-   The variable `number` only exists **inside** this block.
-   `println!("{}", number);` is fine **inside** this scope.
+   The variable `number2` only exists **inside** this block.
+   `println!("{}", number2);` is fine **inside** this scope.
 
 3. `println!("{}", number2);`
    ❌ This will cause a **compiler error**: `cannot find value number2 in this scope`.
