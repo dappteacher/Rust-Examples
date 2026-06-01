@@ -112,11 +112,4 @@ u64 min = 0
 i64 max = 9223372036854775807
 i64 min = -9223372036854775808
 ```
-
-### Interview Tip
-
-A common interview question is:
-
-> Why is `i64::MAX` equal to `2^63 - 1` instead of `2^63`?
-
-Because one bit is reserved for the sign in two's complement representation, leaving only 63 bits for the magnitude. The pattern with all bits set (`111...111`) represents `-1`, not the largest positive number.
+bits set (`111...111`) represents `-1`, not the largest positive number.
