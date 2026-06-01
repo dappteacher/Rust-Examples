@@ -17,58 +17,106 @@ Here's an overview of the main data types in Rust:
 4. **Character**: Represents a single Unicode scalar value.
    - `char` (e.g., `'a'`, `'α'`, `'∞'`)
 
-### Compound Types
+---
 
-1. **Tuples**: A fixed-size collection of values of potentially different types.
-   - Example: `let tuple: (i32, f64, char) = (42, 3.14, 'a');`
+In Rust, integer types come in **signed** (`i8`, `i16`, `i32`, `i64`, `i128`, `isize`) and **unsigned** (`u8`, `u16`, `u32`, `u64`, `u128`, `usize`) variants.
 
-2. **Arrays**: A fixed-size collection of values of the same type.
-   - Example: `let array: [i32; 3] = [1, 2, 3];`
+## Unsigned Integers (`u*`)
 
-### Additional Types
+Unsigned integers can only store non-negative values.
 
-1. **Slices**: A view into a contiguous sequence of elements in an array or a vector.
-   - Example: `let slice: &[i32] = &array[1..];`
+| Type   | Range                                                    |
+| ------ | -------------------------------------------------------- |
+| `u8`   | 0 to 255                                                 |
+| `u16`  | 0 to 65,535                                              |
+| `u32`  | 0 to 4,294,967,295                                       |
+| `u64`  | 0 to 18,446,744,073,709,551,615                          |
+| `u128` | 0 to 340,282,366,920,938,463,463,374,607,431,768,211,455 |
 
-2. **String and String Slices**:
-   - `String`: A growable, heap-allocated string.
-   - `&str`: A string slice, an immutable view into a string.
+Formula:
 
-3. **Vectors**: A growable array type provided by the standard library.
-   - Example: `let vec: Vec<i32> = vec![1, 2, 3];`
+```text
+0 to 2^N - 1
+```
 
-4. **Enums**: A type that can be one of several variants.
-   - Example:
-     ```rust
-     enum IpAddr {
-         V4(u8, u8, u8, u8),
-         V6(String),
-     }
-     ```
+where `N` is the number of bits.
 
-5. **Structs**: Custom data types that let you name and package together multiple related values.
-   - Example:
-     ```rust
-     struct Point {
-         x: f64,
-         y: f64,
-     }
-     ```
+---
 
-6. **Option and Result**: Special enums for handling optional values and error handling.
-   - `Option<T>`: Represents an optional value (`Some(T)` or `None`).
-   - `Result<T, E>`: Represents either success (`Ok(T)`) or failure (`Err(E)`).
+## Signed Integers (`i*`)
 
-7. **Ranges**: Represent a sequence of values, often used in iteration.
-   - Example: `0..5` (represents values from 0 to 4).
+Signed integers can store both positive and negative values using **two's complement** representation.
 
-### Special Types
+| Type   | Range                                                                                                       |
+| ------ | ----------------------------------------------------------------------------------------------------------- |
+| `i8`   | -128 to 127                                                                                                 |
+| `i16`  | -32,768 to 32,767                                                                                           |
+| `i32`  | -2,147,483,648 to 2,147,483,647                                                                             |
+| `i64`  | -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807                                                     |
+| `i128` | -170,141,183,460,469,231,731,687,303,715,884,105,728 to 170,141,183,460,469,231,731,687,303,715,884,105,727 |
 
-1. **Unit Type**: Represents an empty value or no value.
-   - `()` (used in functions that return nothing)
+Formula:
 
-2. **References**: Borrowed views into data.
-   - Immutable: `&T`
-   - Mutable: `&mut T`
+```text
+-(2^(N-1)) to 2^(N-1) - 1
+```
 
-These data types provide Rust with a flexible and powerful type system that can be used to create robust and efficient programs.
+where `N` is the number of bits.
+
+---
+
+## `usize` and `isize`
+
+These depend on the target architecture.
+
+### On a 64-bit system
+
+| Type    | Range                                                   |
+| ------- | ------------------------------------------------------- |
+| `usize` | 0 to 18,446,744,073,709,551,615                         |
+| `isize` | -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 |
+
+### On a 32-bit system
+
+| Type    | Range                           |
+| ------- | ------------------------------- |
+| `usize` | 0 to 4,294,967,295              |
+| `isize` | -2,147,483,648 to 2,147,483,647 |
+
+`usize` is commonly used for:
+
+* Array indices
+* Vector lengths
+* Memory sizes
+
+---
+
+## Finding the Limits Programmatically
+
+Rust provides associated constants:
+
+```rust
+println!("u64 max = {}", u64::MAX);
+println!("u64 min = {}", u64::MIN);
+
+println!("i64 max = {}", i64::MAX);
+println!("i64 min = {}", i64::MIN);
+```
+
+Output:
+
+```text
+u64 max = 18446744073709551615
+u64 min = 0
+
+i64 max = 9223372036854775807
+i64 min = -9223372036854775808
+```
+
+### Interview Tip
+
+A common interview question is:
+
+> Why is `i64::MAX` equal to `2^63 - 1` instead of `2^63`?
+
+Because one bit is reserved for the sign in two's complement representation, leaving only 63 bits for the magnitude. The pattern with all bits set (`111...111`) represents `-1`, not the largest positive number.
